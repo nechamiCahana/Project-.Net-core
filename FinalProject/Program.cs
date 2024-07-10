@@ -1,5 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using DAL.Interface;
+using DAL.Data;
 using MODELS.Models;
+
+
+
 
 namespace FinalProject
 {
@@ -16,10 +21,11 @@ namespace FinalProject
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            //builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<BookletContext>(op => op.UseSqlServer("DefaultDatabase"));
+            builder.Services.AddScoped<IBooklet, BookletData>();
 
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddDbContext<BookletContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultDataBase")));
 
             var app = builder.Build();
 

@@ -26,8 +26,7 @@ namespace MODELS.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=נחמי-מחשב\\SQLEXPRESS;Database=Booklet;Trusted_Connection=True;",
-                    b => b.MigrationsAssembly("MODELS"));
+                optionsBuilder.UseSqlServer("Data Source=נחמי-מחשב\\SQLEXPRESS;Initial Catalog=Booklet;Integrated Security=SSPI;Trusted_Connection=True;");
             }
         }
 
