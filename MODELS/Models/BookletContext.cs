@@ -22,13 +22,13 @@ namespace MODELS.Models
         public DbSet<Orders> Orders { get; set; }
 
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Data Source=נחמי-מחשב\\SQLEXPRESS;Initial Catalog=Booklet;Integrated Security=SSPI;Trusted_Connection=True;");
-            }
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    if (!optionsBuilder.IsConfigured)
+        //    {
+        //        optionsBuilder.UseSqlServer("Data Source=NECHAMI\\SQLEXPRESS;Database=Booklet;Integrated Security=SSPI;Trusted_Connection=True;");
+        //    }
+        //}
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -39,13 +39,15 @@ namespace MODELS.Models
             {
                 entity.HasKey(e => e.ID);
                 entity.Property(e => e.Name).IsRequired();
-                entity.Property(e => e.Time).IsRequired();
+                entity.Property(e => e.Price).IsRequired();
                 // ניתן להוסיף הגדרות נוספות כפי הצורך
             });
 
             modelBuilder.Entity<Orders>(entity =>
             {
                 entity.HasKey(e => e.ID);
+                entity.Property(e => e.OrderingName).IsRequired();
+                entity.Property(e => e.DateOrder).IsRequired();
                 // ניתן להוסיף הגדרות נוספות כפי הצורך
                 entity.Property(e => e.MyAllBooklet)
               .HasConversion(

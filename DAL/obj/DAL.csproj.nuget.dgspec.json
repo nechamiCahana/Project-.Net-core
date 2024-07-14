@@ -83,6 +83,10 @@
             "Serilog.Sinks.File": {
               "target": "Package",
               "version": "[6.0.0, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.6, )"
             }
           },
           "imports": [
@@ -175,6 +179,10 @@
             "Serilog.Sinks.File": {
               "target": "Package",
               "version": "[6.0.0, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.6, )"
             }
           },
           "imports": [

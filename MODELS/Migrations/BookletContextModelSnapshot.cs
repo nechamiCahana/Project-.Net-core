@@ -34,8 +34,8 @@ namespace MODELS.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
 
                     b.HasKey("ID");
 

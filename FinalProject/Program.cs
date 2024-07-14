@@ -25,6 +25,7 @@ namespace FinalProject
             //builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<BookletContext>(op => op.UseSqlServer("DefaultDatabase"));
             builder.Services.AddScoped<IBooklet, BookletData>();
+            builder.Services.AddScoped<IOrder, OrderData>();
 
 
             var app = builder.Build();
