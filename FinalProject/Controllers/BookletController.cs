@@ -1,5 +1,6 @@
 ﻿using DAL.Dtos;
 using DAL.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MODELS.Models;
@@ -53,6 +54,5 @@ namespace FinalProject.Controllers
         {
             _bookletStore.DeleteBooklet(id);
         }
-
     }
 }
