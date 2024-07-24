@@ -3,7 +3,6 @@ using DAL.Interface;
 using DAL.Data;
 using MODELS.Models;
 using BL;
-using AutoMapper.Extensions.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -12,6 +11,9 @@ using Serilog;
 using System.Security.Claims;
 using Microsoft.OpenApi.Models;
 using DAL.Profiles;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
+using AutoMapper;
 
 namespace FinalProject
 {
@@ -20,29 +22,15 @@ namespace FinalProject
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-        //    string myCors = "_myCors";
-        //    // Setup Serilog to write to a file
-        //    Log.Logger = new LoggerConfiguration()
-        //.WriteTo.File(@"C:\git_proj_.netcore\project_.net_core\project_.net_core\myLogDoc.txt",
-        //rollingInterval: RollingInterval.Day)
-        //.CreateLogger();
-        //    var builder = WebApplication.CreateBuilder(args);
 
-        //    builder.Services.AddControllers();
-        //    builder.Services.AddEndpointsApiExplorer();
+            builder.Services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture(CultureInfo.InvariantCulture);
 
+            });
 
-
-        //    builder.Services.AddCors(op =>
-        //    {
-        //        op.AddPolicy(myCors,
-        //            builder =>
-        //            {
-        //                builder.WithOrigins("*")
-        //                .AllowAnyHeader()
-        //                .AllowAnyMethod();
-        //            });
-        //    });
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
 
             //jwt
             var jwtIssuer = builder.Configuration["Jwt:Issuer"];
@@ -55,25 +43,25 @@ namespace FinalProject
             }
 
 
-            //builder.Services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //})
-            //.AddJwtBearer(options =>
-            //{
-            //    options.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuer = true,
-            //        ValidateAudience = true,
-            //        ValidateLifetime = true,
-            //        ValidateIssuerSigningKey = true,
-            //        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            //        ValidAudience = builder.Configuration["Jwt:Issuer"],
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
-            //        RoleClaimType = ClaimTypes.Role
-            //    };
-            //});
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidAudience = builder.Configuration["Jwt:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+                    RoleClaimType = ClaimTypes.Role
+                };
+            });
 
             builder.Services.AddAuthorization(options =>
             {
@@ -110,16 +98,9 @@ namespace FinalProject
             });
             });
 
-            //builder.Services.AddAuthorization();
 
-            // Add services to the container.
 
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            //builder.Services.AddSwaggerGen();
-
-            //builder.Services.AddAutoMapper(typeof(BookletProfile).Assembly);
-            //builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            builder.Services.AddControllersWithViews();
 
             builder.Services.AddDbContext<Context>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("DefaultDatabase")));
             builder.Services.AddScoped<IBooklet, BookletData>();
@@ -128,29 +109,16 @@ namespace FinalProject
             builder.Services.AddScoped<IUser, UserData>();
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            builder.Services.AddAutoMapper(typeof(BookletProfile).Assembly);
 
-            var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
-
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                // SeedData is not needed if the user is creating the first manager
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -160,12 +128,12 @@ namespace FinalProject
             }
 
             app.UseHttpsRedirection();
+
             app.UseMiddleware<LogMiddlware>();
+            //app.UseMiddleware<JwtMiddleware>();
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseMiddleware<JwtMiddleware>();
 
             app.MapControllers();
 

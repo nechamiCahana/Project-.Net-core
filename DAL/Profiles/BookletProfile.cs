@@ -10,14 +10,19 @@ using AutoMapper;
 
 namespace DAL.Profiles
 {
-    public class BookletProfile
+    public class BookletProfile:Profile
     {
-        CreateMap<BookletDto, Booklet>();
-        CreateMap<User, UserDto>();
-        CreateMap<UserDto, User>();
-        CreateMap<ManagerDto, Manager>();
-        CreateMap<UserDto, User>();
-        CreateMap<Manager, ManagerDto>();    
-      
+        public BookletProfile()
+        {
+            CreateMap<Booklet,BookletDto>().ReverseMap();
+            CreateMap<BookletDto, Booklet>().ReverseMap();
+            CreateMap<Orders,OrderDto>().ReverseMap();
+            CreateMap<OrderDto, Orders>();
+            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();
+            CreateMap<ManagerDto, Manager>();
+            CreateMap<Manager, ManagerDto>();
+        }
+       
     }
 }
