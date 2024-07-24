@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MODELS.Migrations
 {
-    [DbContext(typeof(BookletContext))]
+    [DbContext(typeof(Context))]
     [Migration("20240714111108_4")]
     partial class _4
     {

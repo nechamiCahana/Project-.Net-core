@@ -13,9 +13,9 @@ namespace DAL.Data
 {
     public class BookletData:IBooklet
     {
-        private readonly BookletContext _context;
+        private readonly Context _context;
         private readonly IMapper _mapper;
-        public BookletData(BookletContext context,IMapper mapper)
+        public BookletData(Context context,IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

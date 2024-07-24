@@ -12,7 +12,12 @@ namespace DAL.Profiles
 {
     public class BookletProfile
     {
-        //CreateMap<Booklet, BookletDto>();
-        // CreateMap<BookletDto,Booklet> ();
+        CreateMap<BookletDto, Booklet>();
+        CreateMap<User, UserDto>();
+        CreateMap<UserDto, User>();
+        CreateMap<ManagerDto, Manager>();
+        CreateMap<UserDto, User>();
+        CreateMap<Manager, ManagerDto>();    
+      
     }
 }

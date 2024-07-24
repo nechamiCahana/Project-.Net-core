@@ -13,9 +13,9 @@ namespace DAL.Data
 {
     public class OrderData:IOrder
     {
-        private readonly BookletContext _context;
+        private readonly Context _context;
         private readonly IMapper _mapper;
-        public OrderData(BookletContext context, IMapper mapper)
+        public OrderData(Context context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
